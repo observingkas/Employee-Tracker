@@ -7,11 +7,11 @@ export const roleQueries = {
     return pool
       .query(
         `
-            SELECT r.id, r.title, r.salary, d.name as department
-            FROM role r
-            JOIN department d ON r.department_id = d.id
-            ORDER BY r.id
-            `
+        SELECT r.id, r.title, r.salary, d.name as department_name
+        FROM role r
+        JOIN department d ON r.department_id = d.id
+        ORDER BY r.id
+    `
       )
       .then((result) => result.rows);
   },

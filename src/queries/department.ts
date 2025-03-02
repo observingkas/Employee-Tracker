@@ -5,9 +5,16 @@ export const departmentQueries = {
   //View all departments
   viewAll: () => {
     return pool
-      .query("SELECT * FROM department ORDER BY id")
-      .then((result) => result.rows);
-  },
+        .query("SELECT * FROM department ORDER BY id")
+        .then((result) => {
+            console.log('Query result:', result.rows); // Debug log
+            return result.rows;
+        })
+        .catch(error => {
+            console.error('Database error:', error);
+            throw error;
+        });
+},
 
   //Add a department
   add: (name: string) => {

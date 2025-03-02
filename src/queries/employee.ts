@@ -4,25 +4,32 @@ import { Employee } from "../types/database.types";
 export const employeeQueries = {
   // View all employees with their role, department, and manager information
   viewAll: () => {
+    console.log('Starting employee query...');
     return pool
-      .query(
-        `
+        .query(`
             SELECT
-            e.id,
-            e.first_name,
-            e.last_name,
-            r.title,
-            d.name as department,
-            r.salary,
-            CONCAT(m.first_name, ' ', m.last_name) as manager
+                e.id,
+                e.first_name,
+                e.last_name,
+                r.title,
+                d.name as department,
+                r.salary,
+                CONCAT(m.first_name, ' ', m.last_name) as manager
             FROM employee e
             LEFT JOIN role r ON e.role_id = r.id
+            LEFT JOIN department d ON r.department_id = d.id
             LEFT JOIN employee m ON e.manager_id = m.id
             ORDER BY e.id
-            `
-      )
-      .then((result) => result.rows);
-  },
+        `)
+        .then((result) => {
+          console.log('Raw query result:', result);
+            return result.rows;
+        })
+        .catch(error => {
+            console.error('Database error:', error);
+            throw error;
+        });
+},
 
   // Add an employee
   add: (
@@ -43,8 +50,8 @@ export const employeeQueries = {
   updateRole: (employee_id: number, new_role_id: number) => {
     return pool
       .query("UPDATE employee SET role_id = $2 WHERE id = $1 RETURNING *", [
-        employee_id,
         new_role_id,
+        employee_id,
       ])
       .then((result) => result.rows[0]);
   },

@@ -12,4 +12,18 @@ const pool = new Pool({
   port: 5432,
 });
 
+// Test query with detailed logging
+pool
+  .query("SELECT NOW()")
+  .then((result) => {
+    console.log("Database connected successfully!");
+    console.log("Connection test result:", result.rows[0]);
+  })
+  .catch((err) => console.log("Database connection error:", err));
+
+// Add error handling to pool
+pool.on("error", (err) => {
+  console.error("Unexpected error on idle client", err);
+});
+
 export default pool;

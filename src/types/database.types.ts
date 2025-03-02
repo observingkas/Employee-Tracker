@@ -19,3 +19,8 @@ export interface Employee {
   role_id: number;
   manager_id: number | null;
 }
+
+export type UpdateRole = {
+  employee_id: number;
+  role_id: number;
+};
